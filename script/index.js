@@ -11,9 +11,9 @@ import {data} from './modules/todoStorage.js';
 
     const {list, form} = renderToDo(app);
 
+
     renderRow(list, data);
     deleteControl(list, data);
-
     taskFormControl(form, list, data);
   };
 

@@ -5,7 +5,6 @@ import {
   createRow,
 } from './createElements.js';
 
-
 export const renderToDo = (app) => {
   const title = createTitle();
   const form = createForm();

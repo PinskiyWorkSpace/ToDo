@@ -39,11 +39,31 @@ const createButtonsGroup = params => {
   return btns;
 };
 
+const createSelect = () => {
+  const select = document.createElement('select');
+  select.classList.add('form-select', 'w-25', 'me-3');
+  select.setAttribute('name', 'importance');
+
+  const ordinary = document.createElement('option');
+  ordinary.textContent = 'обычная';
+
+  const important = document.createElement('option');
+  important.textContent = 'важная';
+
+  const urgent = document.createElement('option');
+  urgent.textContent = 'срочная';
+
+  select.append(ordinary, important, urgent);
+
+  return select;
+};
+
 const createForm = () => {
   const form = document.createElement('form');
   form.classList.add('d-flex', 'align-items-center', 'mb-3');
 
   const input = creatLabel();
+  const select = createSelect();
 
   const buttonGroup = createButtonsGroup([{
     className: 'btn btn-primary me-3',
@@ -57,8 +77,9 @@ const createForm = () => {
   },
   ]);
 
+  form.append(input, select, ...buttonGroup);
 
-  form.append(input, ...buttonGroup);
+  form.input = input;
 
   return form;
 };
@@ -89,9 +110,8 @@ const createTable = () => {
   return wrapper;
 };
 
-const createRow = ({id, taskValue, status}, n) => {
+const createRow = ({id, taskValue, status, importanceTask}, n) => {
   const tr = document.createElement('tr');
-  tr.classList.add('table-light');
 
   const numberTask = document.createElement('td');
   numberTask.textContent = n + 1;
@@ -110,19 +130,31 @@ const createRow = ({id, taskValue, status}, n) => {
   btnDel.classList.add('btn', 'btn-danger', 'me-3');
   btnDel.textContent = 'Удалить';
 
+  const btnEdit = document.createElement('button');
+  btnEdit.classList.add('btn', 'btn-edit', 'me-3');
+  btnEdit.textContent = 'Редактировать';
+
   const btnEnd = document.createElement('button');
   btnEnd.classList.add('btn', 'btn-success');
   btnEnd.textContent = 'Завершить';
 
-  btnGroup.append(btnDel, btnEnd);
-
-  tr.append(numberTask, task, process, btnGroup);
-
-  if (status === 'Выполнено') {
-    tr.classList.remove('table-light');
+  if (status === 'В процессе') {
+    if (importanceTask === 'важная') {
+      tr.classList.add('table-warning');
+    } else if (importanceTask === 'срочная') {
+      tr.classList.add('table-danger');
+    } else {
+      tr.classList.add('table-light');
+    }
+  } else {
     tr.classList.add('table-success');
     task.classList.add('text-decoration-line-through');
+    btnEnd.textContent = 'Отменить';
   }
+
+  btnGroup.append(btnDel, btnEdit, btnEnd);
+
+  tr.append(numberTask, task, process, btnGroup);
 
   return tr;
 };
