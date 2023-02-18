@@ -1,6 +1,5 @@
 
-// export const user = prompt('Введите имя');
-export const user = 'F';
+export const user = prompt('Введите имя');
 
 export const getStorage = key => JSON.parse(localStorage.getItem(key)) || [];
 

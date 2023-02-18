@@ -26,8 +26,23 @@ const deleteTask = (target, elem) => {
   }
 };
 
-const changeTask = (elem) => {
+const changeTask = (elem, id) => {
   const status = elem.querySelectorAll('td')[2].textContent;
+  const data = getStorage(user);
+
+  data.forEach(el => {
+    if (el.id === id) {
+      const importance = el.importanceTask;
+
+      if (importance === 'важная') {
+        elem.classList.add('table-warning');
+      } else if (importance === 'срочная') {
+        elem.classList.add('table-danger');
+      } else {
+        elem.classList.add('table-light');
+      }
+    }
+  });
 
   if (status === 'В процессе') {
     elem.classList.remove('table-warning', 'table-danger', 'table-light');
@@ -35,9 +50,8 @@ const changeTask = (elem) => {
     elem.classList.add('table-success');
     elem.querySelectorAll('td')[2].textContent = 'Выполнено';
   } else {
-    elem.classList.add('table-light');
-    elem.querySelector('.task').classList.remove('text-decoration-line-through');
     elem.classList.remove('table-success');
+    elem.querySelector('.task').classList.remove('text-decoration-line-through');
     elem.querySelectorAll('td')[2].textContent = 'В процессе';
   }
 };
@@ -63,7 +77,7 @@ export const deleteControl = (list) => {
       } else {
         btn.textContent = 'Отменить';
       }
-      changeTask(task);
+      changeTask(task, id);
       editStatusStorage(user, id);
     }
 
@@ -81,11 +95,20 @@ export const deleteControl = (list) => {
 };
 
 export const taskFormControl = (form, list) => {
+  const input = document.querySelector('.form-control');
+  const btn = document.querySelector('.btn-primary');
+  const select = document.querySelector('.form-select');
+
+  form.addEventListener('input', e => {
+    if (input.value !== '') {
+      btn.disabled = false;
+    } else {
+      btn.disabled = true;
+    }
+  });
+
   form.addEventListener('submit', e => {
     e.preventDefault();
-
-    const input = document.querySelector('.form-control');
-    const select = document.querySelector('.form-select');
 
     const newTask = {
       id: Math.random().toString().substring(2, 10),
@@ -100,7 +123,7 @@ export const taskFormControl = (form, list) => {
 
     list.append(createRow(newTask, numTask));
     form.reset();
+
+    btn.disabled = true;
   });
 };
-
-

@@ -17,6 +17,5 @@ import {data} from './modules/todoStorage.js';
     taskFormControl(form, list, data);
   };
 
-
   window.ToDoInit = init;
 }

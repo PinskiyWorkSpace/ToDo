@@ -76,6 +76,8 @@ const createForm = () => {
     text: 'Очистить',
   },
   ]);
+  const btn = buttonGroup[0];
+  btn.setAttribute('disabled', true);
 
   form.append(input, select, ...buttonGroup);
 
